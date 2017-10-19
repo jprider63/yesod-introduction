@@ -8,4 +8,4 @@
 
 /comments CommentR POST
 
-/profile ProfileR GET
+/profile/#Text ProfileR GET

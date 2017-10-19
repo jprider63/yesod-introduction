@@ -1,7 +1,7 @@
 User
-    ident Text
+    username Text
     email Text Maybe
-    UniqueUser ident
+    UniqueUser username
     deriving Typeable
 
 Comment json -- Adding "json" causes ToJSON and FromJSON instances to be derived.
