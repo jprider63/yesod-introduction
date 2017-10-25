@@ -1,13 +1,21 @@
 module Handler.Register where
 
+import Data.Char (isAlphaNum)
+import qualified Data.Text as Text
 import Yesod.Form.Bootstrap3
 
 import Import
 
 registerForm :: Form User
 registerForm = renderBootstrap3 BootstrapBasicForm $ User
-    <$> areq textField (bfs ("Username" :: Text)) Nothing
+    <$> areq usernameField (bfs ("Username" :: Text)) Nothing
     <*> aopt emailField (bfs ("Email" :: Text)) Nothing
+
+    where
+        usernameField = check validateUsername textField
+
+        validateUsername u | Text.all isAlphaNum u = Right u
+        validateUsername _ = Left ("Usernames must be alphanumeric." :: Text)
 
 generateHtml :: Widget -> Enctype -> Handler Html
 generateHtml form enctype = defaultLayout $ do
