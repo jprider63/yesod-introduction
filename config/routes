@@ -5,6 +5,7 @@
 /robots.txt RobotsR GET
 
 / HomeR GET POST
+/register RegisterR GET POST
 
 /comments CommentR POST
 
