@@ -9,4 +9,6 @@
 
 /comments CommentR POST
 
+/users UsersR GET
+
 /profile/#Text ProfileR GET

@@ -71,13 +71,14 @@ library
       Handler.Home
       Handler.Profile
       Handler.Register
+      Handler.Users
       Import
       Import.NoFoundation
       Model
       Settings
       Settings.StaticFiles
   default-language: Haskell2010
-  extensions: QuasiQuotes, TemplateHaskell, OverloadedStrings, NoImplicitPrelude
+  extensions: QuasiQuotes, TemplateHaskell, OverloadedStrings, NoImplicitPrelude, ScopedTypeVariables, FlexibleContexts
 
 executable yesod-introduction
   main-is: main.hs
