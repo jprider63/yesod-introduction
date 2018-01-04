@@ -10,3 +10,4 @@
 /comments CommentR POST
 
 /profile/#Text ProfileR GET
+/profile/#Text/poke PokeR GET

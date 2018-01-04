@@ -4,6 +4,11 @@ User
     UniqueUser username
     deriving Typeable
 
+Poke
+    poker UserId
+    pokee UserId
+    timestamp UTCTime
+
 Comment json -- Adding "json" causes ToJSON and FromJSON instances to be derived.
     message Text
     userId UserId Maybe
