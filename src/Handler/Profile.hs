@@ -11,21 +11,27 @@ import Yesod.Form.Bootstrap3
 
 import Import
 
--- pokeForm :: Form ()
--- pokeForm = renderBootstrap3 BootstrapBasicForm ()
+pokeForm :: Form ()
+pokeForm = renderBootstrap3 BootstrapBasicForm $ pure ()
 
-getPokeR :: Text -> Handler Html
-getPokeR username = do
+postPokeR :: Text -> Handler Html
+postPokeR username = do
     pokerUserId <- requireAuthId
-    (Entity pokedUserId _) <- runDB $ getBy404 $ UniqueUser username
+    ((res, form), enctype) <- runFormPost pokeForm
+    case res of
+        FormSuccess () -> do
+            (Entity pokedUserId _) <- runDB $ getBy404 $ UniqueUser username
 
-    now <- liftIO getCurrentTime 
-    let poke = Poke pokerUserId pokedUserId now
-    runDB $ insert_ poke
+            now <- liftIO getCurrentTime 
+            let poke = Poke pokerUserId pokedUserId now
+            runDB $ insert_ poke
 
-    setMessage $ toHtml $ "Poked " <> username
+            setMessage $ toHtml $ "Poked " <> username
 
-    redirect $ ProfileR username
+            redirect $ ProfileR username
+        _ ->
+            -- Error case.
+            generateHtml username $ Just (form, enctype)
 
 
 getProfileR :: Text -> Handler Html
@@ -46,6 +52,7 @@ generateHtml username formM = do
                 Profile: #{username}
             <div>
                 Email: #{email}
+            ^{formW}
             <h2>
                 Poked by:
             <ul>
@@ -53,9 +60,30 @@ generateHtml username formM = do
         |]
 
     where
+        formW = do
+            userM <- handlerToWidget maybeAuthId
+            case userM of
+                Nothing ->
+                    mempty
+                Just _ -> do 
+                    (form, enctype) <- handlerToWidget makeForm
+                    [whamlet|
+                        <form .form-basic role=form method=post action="@{PokeR username}" enctype=#{enctype}>
+                            ^{form}
+                            <div .form-group>
+                                <button .btn .btn-primary type="submit">
+                                    Poke
+                    |]
+        
+        makeForm = case formM of
+            Nothing -> 
+                generateFormPost pokeForm
+            Just f -> 
+                return f
+
         renderPoke (Entity _ (Poke poker pokee timestamp)) = 
             [whamlet|
                 <li>
-                    #{show poker}
+                    #{show poker} at #{show timestamp}
             |]
 
