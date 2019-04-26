@@ -71,6 +71,7 @@ library
       Handler.Home
       Handler.Profile
       Handler.Register
+      Handler.ListUsers
       Import
       Import.NoFoundation
       Model
